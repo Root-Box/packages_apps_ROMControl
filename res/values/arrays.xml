@@ -91,6 +91,7 @@
         <item>POWERMENU</item>
         <item>PROFILE</item>
         <item>QUIETHOURS</item>
+        <item>NAVBARHIDE</item>
     </string-array>
     <string-array name="available_toggles_values" translatable="false">
         <item>@string/toggle_user</item>
@@ -122,6 +123,7 @@
         <item>@string/toggle_powermenu</item>
         <item>@string/toggle_profile</item>
         <item>@string/toggle_quiethours</item>
+        <item>@string/toggle_navbar_hide</item>
     </string-array>
 
     <!-- Toggles per row -->
@@ -841,6 +843,25 @@
     <string-array name="choose_toggle_side_values" translatable="false">
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="hide_navbar_timeout_entries" translatable="false">
+        <item>Never</item>
+        <item>1.5 Sec</item>
+        <item>3 Sec</item>
+        <item>5 Sec</item>
+        <item>10 Sec</item>
+        <item>15 Sec</item>
+        <item>30 Sec</item>
+    </string-array>
+    <string-array name="hide_navbar_timeout_values" translatable="false">
+        <item>0</item>
+        <item>1500</item>
+        <item>3000</item>
+        <item>5000</item>
+        <item>10000</item>
+        <item>15000</item>
+        <item>30000</item>
     </string-array>
 
 </resources>
