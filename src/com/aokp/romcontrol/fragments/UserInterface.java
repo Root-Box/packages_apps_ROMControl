@@ -775,6 +775,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
 
     class InstallBootAnimTask extends AsyncTask<Void, Void, Void> {
         private final DialogInterface dialog;
+        private String taskAnimationPath;
 
         public InstallBootAnimTask(DialogInterface dialog) {
             this.dialog = dialog;
@@ -782,6 +783,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
 
         protected void onPreExecute() {
             //Update setting to reflect that boot animation is now enabled
+            taskAnimationPath = mBootAnimationPath;
             mDisableBootAnimation.setChecked(false);
             DisableBootAnimation();
             dialog.dismiss();
@@ -790,7 +792,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         @Override
         protected Void doInBackground(Void... voids) {
             //Copy new bootanimation, give proper permissions
-            new CMDProcessor().su.runWaitFor("cp "+ mBootAnimationPath +" /data/local/bootanimation.zip");
+            new CMDProcessor().su.runWaitFor("cp "+ taskAnimationPath +" /data/local/bootanimation.zip");
             new CMDProcessor().su.runWaitFor("chmod 644 /data/local/bootanimation.zip");
             return null;
         }
