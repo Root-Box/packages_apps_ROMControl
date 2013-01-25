@@ -817,6 +817,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         } else if (preference == mUserModeUI) {
             Settings.System.putInt(getActivity().getContentResolver(),
                     Settings.System.USER_UI_MODE, Integer.parseInt((String) newValue));
+            Helpers.restartSystemUI();
             return true;
         }
         return false;
