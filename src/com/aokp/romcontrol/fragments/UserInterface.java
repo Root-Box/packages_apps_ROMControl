@@ -92,6 +92,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final String PREF_USER_MODE_UI = "user_mode_ui";
     private static final String PREF_HIDE_EXTRAS = "hide_extras";
     private static final String PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED = "wakeup_when_plugged_unplugged";
+    private static final String PREF_FORCE_DUAL_PANEL = "force_dualpanel";
     private static final String STATUSBAR_HIDDEN = "statusbar_hidden";
 
     private static final int REQUEST_PICK_WALLPAPER = 201;
@@ -122,6 +123,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     ListPreference mUserModeUI;
     CheckBoxPreference mHideExtras;
     CheckBoxPreference mWakeUpWhenPluggedOrUnplugged;
+    CheckBoxPreference mDualpane;
     CheckBoxPreference mStatusBarHide;
 
     private AnimationDrawable mAnimationPart1;
@@ -200,13 +202,18 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mStatusBarHide = (CheckBoxPreference) findPreference(STATUSBAR_HIDDEN);
         mStatusBarHide.setChecked(Settings.System.getBoolean(cr,
                 Settings.System.STATUSBAR_HIDDEN, false));
-        
+
         mUserModeUI = (ListPreference) findPreference(PREF_USER_MODE_UI);
         int uiMode = Settings.System.getInt(cr,
                 Settings.System.CURRENT_UI_MODE, 0);
         mUserModeUI.setValue(Integer.toString(Settings.System.getInt(cr,
                 Settings.System.USER_UI_MODE, uiMode)));
         mUserModeUI.setOnPreferenceChangeListener(this);
+
+        mDualpane = (CheckBoxPreference) findPreference(PREF_FORCE_DUAL_PANEL);
+        mDualpane.setChecked(Settings.System.getBoolean(mContext.getContentResolver(),
+                        Settings.System.FORCE_DUAL_PANEL, getResources().getBoolean(
+                        com.android.internal.R.bool.preferences_prefer_dual_pane)));
 
         mWakeUpWhenPluggedOrUnplugged = (CheckBoxPreference) findPreference(PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED);
         mWakeUpWhenPluggedOrUnplugged.setChecked(Settings.System.getBoolean(mContext.getContentResolver(),
@@ -300,6 +307,11 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         } else if (preference == mHideExtras) {
             Settings.System.putBoolean(mContext.getContentResolver(),
                     Settings.System.HIDE_EXTRAS_SYSTEM_BAR,
+                    ((CheckBoxPreference) preference).isChecked());
+            return true;
+        } else if (preference == mDualpane) {
+            Settings.System.putBoolean(mContext.getContentResolver(),
+                    Settings.System.FORCE_DUAL_PANEL,
                     ((CheckBoxPreference) preference).isChecked());
             return true;
         } else if (preference == mCustomBootAnimation) {
