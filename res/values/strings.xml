@@ -295,6 +295,9 @@
     <string name="toggle_battery">Battery</string>
     <string name="toggle_brightness">Brightness</string>
     <string name="toggle_sound_state">Ring/Vib/Silent</string>
+    <string name="toggle_powermenu">Power Menu</string>
+    <string name="toggle_profile">Profile</string>
+    <string name="toggle_quiethours">Quiet Hours</string>
 
     <!-- Statusbar | Battery -->
     <string name="battery_icon">Battery icon style</string>
@@ -930,7 +933,4 @@
     <!-- haptic feedback on toggle press -->
     <string name="toggles_enable_haptic_feedback_title">Enable haptic feedback</string>
     <string name="toggles_enable_haptic_feedback_summary">Use haptic feedback when pressing toggles</string>
-
-    <string name="toggle_powermenu">Power Menu</string>
-    <string name="toggle_profile">Profile</string>
 </resources>
