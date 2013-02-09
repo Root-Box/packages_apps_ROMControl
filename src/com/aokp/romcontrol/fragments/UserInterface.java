@@ -83,7 +83,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final String PREF_USER_MODE_UI = "user_mode_ui";
     private static final String PREF_HIDE_EXTRAS = "hide_extras";
     private static final String PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED = "wakeup_when_plugged_unplugged";
-    private static final String NAVIGATION_BAR_STATUS_SHOW_NOW = "navigation_bar_status_show_now";
+    private static final String STATUSBAR_HIDDEN = "statusbar_hidden";
 
     private static final int REQUEST_PICK_WALLPAPER = 201;
     private static final int REQUEST_PICK_CUSTOM_ICON = 202;
@@ -192,9 +192,9 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mNavBarAlpha = (SeekBarPreference) findPreference("navigation_bar_alpha");
         mNavBarAlpha.setOnPreferenceChangeListener(this);
         
-        mStatusBarHide = (CheckBoxPreference) findPreference(NAVIGATION_BAR_STATUS_SHOW_NOW);
+        mStatusBarHide = (CheckBoxPreference) findPreference(STATUSBAR_HIDDEN);
         mStatusBarHide.setChecked(Settings.System.getBoolean(cr,
-                Settings.System.NAVIGATION_BAR_STATUS_SHOW_NOW, false));
+                Settings.System.STATUSBAR_HIDDEN, false));
         
         mUserModeUI = (ListPreference) findPreference(PREF_USER_MODE_UI);
         int uiMode = Settings.System.getInt(cr,
@@ -422,7 +422,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         } else if (preference == mStatusBarHide) {
             boolean checked = ((CheckBoxPreference)preference).isChecked();
             Settings.System.putBoolean(getActivity().getContentResolver(),
-                    Settings.System.NAVIGATION_BAR_STATUS_SHOW_NOW, checked ? true : false);
+                    Settings.System.STATUSBAR_HIDDEN, checked ? true : false);
             return true;
         }
 
