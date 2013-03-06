@@ -54,7 +54,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
         mPicker = new ShortcutPickerHelper(this, this);
 
         mEnableSPen = (CheckBoxPreference) findPreference("enable_spen");
-        mEnableSPen.setChecked(Settings.System.getBoolean(getContentResolver(),
+        mEnableSPen.setChecked(Settings.System.getBoolean(mContentRes,
                 Settings.System.ENABLE_SPEN_ACTIONS, false));
 
         mLeft = (ListPreference) findPreference("spen_left");
@@ -88,9 +88,9 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             Preference preference) {
         if (preference == mEnableSPen) {
 
-            Settings.System.putBoolean(getActivity().getContentResolver(),
+            Settings.System.putBoolean(mContentRes,
                     Settings.System.ENABLE_SPEN_ACTIONS,
-                    ((CheckBoxPreference) preference).isChecked());
+                    mEnableSPen.isChecked());
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
@@ -106,7 +106,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[SWIPE_LEFT], (String) newValue);
             mLeft.setSummary(getProperSummary(mLeft));
             }
@@ -116,7 +116,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[SWIPE_RIGHT], (String) newValue);
             mRight.setSummary(getProperSummary(mRight));
             }
@@ -126,7 +126,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[SWIPE_UP], (String) newValue);
             mUp.setSummary(getProperSummary(mUp));
             }
@@ -136,7 +136,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[SWIPE_DOWN], (String) newValue);
             mDown.setSummary(getProperSummary(mDown));
             }
@@ -146,7 +146,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[TAP_DOUBLE], (String) newValue);
             mDouble.setSummary(getProperSummary(mDouble));
             }
@@ -156,7 +156,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             if (newValue.equals(AwesomeConstant.ACTION_APP.value())) {
              mPicker.pickShortcut();
             } else {
-            result = Settings.System.putString(getContentResolver(),
+            result = Settings.System.putString(mContentRes,
                        Settings.System.SPEN_ACTIONS[PRESS_LONG], (String) newValue);
             mLong.setSummary(getProperSummary(mLong));
             }
@@ -166,7 +166,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
 
     public void shortcutPicked(String uri, String friendlyName, Bitmap bmp, boolean isApplication) {
           mPreference.setSummary(friendlyName);
-          Settings.System.putString(getContentResolver(), mString, (String) uri);
+          Settings.System.putString(mContentRes, mString, (String) uri);
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -194,7 +194,7 @@ public class SPenGestures extends AOKPPreferenceFragment implements
             mString = Settings.System.SPEN_ACTIONS[PRESS_LONG];
         }
 
-        String uri = Settings.System.getString(getActivity().getContentResolver(),mString);
+        String uri = Settings.System.getString(mContentRes,mString);
         if (TextUtils.isEmpty(uri)) {
             return getResources().getString(R.string.navbar_action_none);
         }
