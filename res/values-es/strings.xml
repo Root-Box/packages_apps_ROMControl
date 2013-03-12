@@ -7,6 +7,7 @@
     <string name="user_interface">Interfaz</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">Aceptar</string>
+    <string name="save">Guardar</string>
     <string name="menu_main_activity_change_locale">En blanco!</string>
     <string name="header_statusbar">Barra de estado</string>
     <string name="header_navbar">Barra de navegación</string>
@@ -73,6 +74,7 @@
     <string name="title_show_torch_toggle">Mostrar interruptor de la linterna</string>
     <string name="title_show_airplane_toggle">Mostrar interruptor modo avión</string>
     <string name="title_show_navbar_hide">Mostrar interruptor de barra de navegación</string>
+    <string name="title_show_reboot_keyguard">Mostrar reinicio en pantalla de bloqueo</string>
 
     <!-- Power Saving -->
     <string name="title_pref_powersaving_pref_mode">Activar ahorro de energía</string>
@@ -169,8 +171,26 @@
     <string name="show_overflow_toast_disable">El botón de menú puede ser visible hasta que se reinicien las aplicaciones</string>
     <string name="notification_show_wifi_ssid_title">Ver nombre de conección wifi</string>
     <string name="notification_show_wifi_ssid_summary">Mostrar el nombre de la conección actual de wifi</string>
-
-
+    <string name="brightness_slider_title">Regulador de brillo en la barra de estado</string>
+    <string name="brightness_slider_summary">Le permite deslizar el dedo por la parte superior de la barra de estado para cambiar el brillo. No hace nada cuando el brillo automático está activado.</string>
+    <string name="user_mode_ui">Modo de interfaz</string>
+    <string name="user_mode_ui_summary">Qué estilo mostrar para la barra de estado y navegación (Los cambios obligaran a reiniciar la interfaz)</string>
+    <string name="phone_mode_ui">Teléfono - NavBar en la barra inferior</string>
+    <string name="tablet_mode_ui">Tablet - Combina el NavBar y las notificaciones</string>
+    <string name="phablet_mode_ui">Phablet - NavBar estilo teléfono</string>
+    <string name="transparency_dialog_title">Ajustes de la transparencia</string>
+    <string name="transparency_dialog_linked_transparency">Enlazar barra de estado &amp; barra de navegación alpha</string>
+    <string name="transparency_dialog_transparency_sb_and_nv">Barra de estado y barra de navegación</string>
+    <string name="transparency_dialog_statusbar">Barra de estado</string>
+    <string name="transparency_dialog_navbar">Barra de navegación</string>
+    <string name="transparency_dialog_match_keyguard_alpha">Coincidir con la pantalla de bloqueo alpha</string>
+    <string name="transparency_dialog_transparency">Pantalla de inicio alpha</string>
+    <string name="transparency_dialog_transparency_keyguard">Pantalla de bloqueo alpha</string>
+    <string name="wakeup_when_plugged_unplugged_title">Despertar al conectar el cargador</string>
+    <string name="wakeup_when_plugged_unplugged_summary">Despierta dispositivo si el cargador está enchufado/desenchufado.</string>
+    <string name="statusbar_hide_title">Ocultar barra de estado</string>
+    <string name="statusbar_hide_summary">Permitir ocultar completamente la barra de estado</string>
+    
     <!-- LCD Density -->
     <string name="lcd_density_title">Densidad LCD</string>
     <string name="lcd_density_summary">Desconocida</string>
@@ -467,6 +487,14 @@
     <string name="lockscreen_unlimited_widgets_summary">Advertencia** Agregar muchos widgets puede ocasionar demasiados problemas de lag en la pantalla de bloqueo.</string>
     <string name="lockscreen_battery_title">Porcentaje de batería en pantalla de desbloqueo</string>
     <string name="lockscreen_battery_summary">Mostrar siempre el porcentaje de la batería en pantalla de desbloqueo</string>
+    <string name="lockscreen_hide_initial_page_hints_title">Ocultar widgets laterales en el bloqueo</string>
+    <string name="lockscreen_hide_initial_page_hints_summary">Establezca si quiere que muestre las páginas de los widgets izquierda y derecha en la pantalla de bloqueo.</string>
+    <string name="lockscreen_minimize_challenge_title">Minimizar el candado de la pantalla de bloqueo</string>
+    <string name="lockscreen_minimize_challenge_summary">Defina si el desbloqueo de la pantalla de bloqueo (círculo, patrón, pin) se minimiza cuando enciende la pantalla.</string>
+    <string name="lockscreen_longpress_challenge_title">Activar pulsación larga para desbloquear</string>
+    <string name="lockscreen_longpress_challenge_summary">Esto permite que el dispositivo se desbloquee con los widgets maximizados con pulsar un rato el icono de bloqueo.</string>
+    <string name="lockscreen_use_widget_container_carousel_title">Utilice animación en los widgets</string>
+    <string name="lockscreen_use_widget_container_carousel_summary">Utilice una animación al cambiar entre los widgets de la pantalla de bloqueo.</string>
     <string name="volume_rocker_wake_title">Desbloquear con volumen</string>
     <string name="volume_rocker_wake_summary">Desbloquear pantalla con los botones de volumen</string>
     <string name="volume_music_controls_title">Control de volumen de musica</string>
