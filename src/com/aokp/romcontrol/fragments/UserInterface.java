@@ -96,7 +96,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final CharSequence PREF_HIDE_EXTRAS = "hide_extras";
     private static final CharSequence PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED = "wakeup_when_plugged_unplugged";
     private static final CharSequence PREF_FORCE_DUAL_PANEL = "force_dualpanel";
-    private static final CharSequence PREF_STATUSBAR_HIDDEN = "statusbar_hidden";
+    private static final String NAVIGATION_BAR_STATUS_SHOW_NOW = "navigation_bar_status_show_now";
     private static final CharSequence PREF_DISABLE_BOOTANIM = "disable_bootanimation";
     private static final CharSequence PREF_CUSTOM_BOOTANIM = "custom_bootanimation";
     private static final CharSequence PREF_NOTIFICATION_VIBRATE = "notification";
@@ -221,10 +221,10 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mHideExtras.setChecked(Settings.System.getBoolean(mContentResolver,
                         Settings.System.HIDE_EXTRAS_SYSTEM_BAR, false));
         
-        mStatusBarHide = (CheckBoxPreference) findPreference(PREF_STATUSBAR_HIDDEN);
-        mStatusBarHide.setChecked(Settings.System.getBoolean(mContentResolver,
-                Settings.System.STATUSBAR_HIDDEN, false));
-
+        mStatusBarHide = (CheckBoxPreference) findPreference(NAVIGATION_BAR_STATUS_SHOW_NOW);
+        mStatusBarHide.setChecked(Settings.System.getBoolean(cr,
+                Settings.System.NAVIGATION_BAR_STATUS_SHOW_NOW, false));
+        
         mUserModeUI = (ListPreference) findPreference(PREF_USER_MODE_UI);
         int uiMode = Settings.System.getInt(mContentResolver,
                 Settings.System.CURRENT_UI_MODE, 0);
@@ -482,9 +482,9 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
             openTransparencyDialog();
             return true;
         } else if (preference == mStatusBarHide) {
-            boolean checked = ((TwoStatePreference)preference).isChecked();
-            Settings.System.putBoolean(mContentResolver,
-                    Settings.System.STATUSBAR_HIDDEN, checked);
+            boolean checked = ((CheckBoxPreference)preference).isChecked();
+            Settings.System.putBoolean(getActivity().getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_STATUS_SHOW_NOW, checked ? true : false);
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
