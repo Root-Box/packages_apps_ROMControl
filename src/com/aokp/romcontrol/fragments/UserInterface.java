@@ -81,6 +81,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final boolean DEBUG = false;
 
     private static final CharSequence PREF_180 = "rotate_180";
+    private static final CharSequence PREF_270 = "rotate_270";
     private static final CharSequence PREF_STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
     private static final CharSequence PREF_NOTIFICATION_WALLPAPER = "notification_wallpaper";
     private static final CharSequence PREF_NOTIFICATION_WALLPAPER_ALPHA = "notification_wallpaper_alpha";
@@ -95,12 +96,14 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final CharSequence PREF_HIDE_EXTRAS = "hide_extras";
     private static final CharSequence PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED = "wakeup_when_plugged_unplugged";
     private static final CharSequence PREF_FORCE_DUAL_PANEL = "force_dualpanel";
-    private static final CharSequence PREF_STATUSBAR_HIDDEN = "statusbar_hidden";
     private static final CharSequence PREF_DISABLE_BOOTANIM = "disable_bootanimation";
     private static final CharSequence PREF_CUSTOM_BOOTANIM = "custom_bootanimation";
     private static final CharSequence PREF_NOTIFICATION_VIBRATE = "notification";
     private static final CharSequence PREF_NAVBAR = "navbar";
     private static final CharSequence PREF_MISC = "misc";
+    private static final CharSequence PREF_POWER_CRT_MODE = "system_power_crt_mode";
+    private static final CharSequence PREF_POWER_CRT_SCREEN_OFF = "system_power_crt_screen_off";
+    private static final String STATUSBAR_HIDDEN = "statusbar_hidden";
 
     private static final int REQUEST_PICK_WALLPAPER = 201;
     //private static final int REQUEST_PICK_CUSTOM_ICON = 202; //unused
@@ -111,6 +114,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final String BOOTANIMATION_SYSTEM_PATH = "/system/media/bootanimation.zip";
 
     CheckBoxPreference mAllow180Rotation;
+    CheckBoxPreference mAllow270Rotation;
     CheckBoxPreference mDisableBootAnimation;
     CheckBoxPreference mStatusBarNotifCount;
     Preference mNotificationWallpaper;
@@ -129,6 +133,8 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     CheckBoxPreference mHideExtras;
     CheckBoxPreference mWakeUpWhenPluggedOrUnplugged;
     CheckBoxPreference mDualpane;
+    ListPreference mCrtMode;
+    CheckBoxPreference mCrtOff;
     CheckBoxPreference mStatusBarHide;
 
     private AnimationDrawable mAnimationPart1;
@@ -163,6 +169,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
                 R.array.disable_bootanimation_insults);
 
         mAllow180Rotation = (CheckBoxPreference) findPreference(PREF_180);
+        mAllow270Rotation = (CheckBoxPreference) findPreference(PREF_270);
         mUserRotationAngles = Settings.System.getInt(mContentResolver,
                 Settings.System.ACCELEROMETER_ROTATION_ANGLES, -1);
         if (mUserRotationAngles < 0) {
@@ -171,9 +178,10 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
                             com.android.internal.R.bool.config_allowAllRotations) ? true : false;
             mUserRotationAngles = mAllowAllRotations  ?
                 (1 | 2 | 4 | 8) : // All angles
-                (1 | 2 | 8); // All except 180
+                (1 | 2); // All except 180 and 270
         }
-        mAllow180Rotation.setChecked(mUserRotationAngles == (1 | 2 | 4 | 8));
+        mAllow180Rotation.setChecked(mUserRotationAngles == (1 | 2 | 4 | 8) || mUserRotationAngles == (1 | 2 | 4));
+        mAllow270Rotation.setChecked(mUserRotationAngles == (1 | 2 | 4 | 8) || mUserRotationAngles == (1 | 2 | 8));
 
         mStatusBarNotifCount = (CheckBoxPreference) findPreference(PREF_STATUS_BAR_NOTIF_COUNT);
         mStatusBarNotifCount.setChecked(Settings.System.getBoolean(mContentResolver,
@@ -216,8 +224,8 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mHideExtras = (CheckBoxPreference) findPreference(PREF_HIDE_EXTRAS);
         mHideExtras.setChecked(Settings.System.getBoolean(mContentResolver,
                         Settings.System.HIDE_EXTRAS_SYSTEM_BAR, false));
-        
-        mStatusBarHide = (CheckBoxPreference) findPreference(PREF_STATUSBAR_HIDDEN);
+
+        mStatusBarHide = (CheckBoxPreference) findPreference(STATUSBAR_HIDDEN);
         mStatusBarHide.setChecked(Settings.System.getBoolean(mContentResolver,
                 Settings.System.STATUSBAR_HIDDEN, false));
 
@@ -232,6 +240,18 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mDualpane.setChecked(Settings.System.getBoolean(mContentResolver,
                         Settings.System.FORCE_DUAL_PANEL, getResources().getBoolean(
                         com.android.internal.R.bool.preferences_prefer_dual_pane)));
+
+        boolean isCrtOffChecked = (Settings.System.getBoolean(mContentResolver,
+                        Settings.System.SYSTEM_POWER_ENABLE_CRT_OFF, true));
+        mCrtOff = (CheckBoxPreference) findPreference(PREF_POWER_CRT_SCREEN_OFF);
+        mCrtOff.setChecked(isCrtOffChecked);
+
+        mCrtMode = (ListPreference) findPreference(PREF_POWER_CRT_MODE);
+        int crtMode = Settings.System.getInt(mContentResolver,
+                Settings.System.SYSTEM_POWER_CRT_MODE, 0);
+        mCrtMode.setValue(Integer.toString(Settings.System.getInt(mContentResolver,
+                Settings.System.SYSTEM_POWER_CRT_MODE, crtMode)));
+        mCrtMode.setOnPreferenceChangeListener(this);
 
         mWakeUpWhenPluggedOrUnplugged = (CheckBoxPreference) findPreference(PREF_WAKEUP_WHEN_PLUGGED_UNPLUGGED);
         mWakeUpWhenPluggedOrUnplugged.setChecked(Settings.System.getBoolean(mContentResolver,
@@ -310,11 +330,19 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
             Preference preference) {
-        if (preference == mAllow180Rotation) {
-            boolean checked = ((TwoStatePreference) preference).isChecked();
+        if (preference == mAllow180Rotation || preference == mAllow270Rotation) {
+            boolean checked180 = ((TwoStatePreference) mAllow180Rotation).isChecked();
+            boolean checked270 = ((TwoStatePreference) mAllow270Rotation).isChecked();
+            int result;
+            if (checked180) {
+                if (checked270) result = (1 | 2 | 4 | 8);
+                else result = (1 | 2 | 4);
+            } else {
+                if (checked270) result = (1 | 2 | 8);
+                else result = (1 | 2);
+            }
             Settings.System.putInt(mContentResolver,
-                    Settings.System.ACCELEROMETER_ROTATION_ANGLES,
-                    checked ? (1 | 2 | 4 | 8) : (1 | 2 | 8));
+                    Settings.System.ACCELEROMETER_ROTATION_ANGLES, result);
             return true;
         } else if (preference == mStatusBarNotifCount) {
             Settings.System.putBoolean(mContentResolver,
@@ -469,10 +497,14 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         } else if ("transparency_dialog".equals(preference.getKey())) {
             openTransparencyDialog();
             return true;
-        } else if (preference == mStatusBarHide) {
-            boolean checked = ((TwoStatePreference)preference).isChecked();
+        } else if (preference == mCrtOff) {
             Settings.System.putBoolean(mContentResolver,
-                    Settings.System.STATUSBAR_HIDDEN, checked);
+                    Settings.System.SYSTEM_POWER_ENABLE_CRT_OFF,
+                    ((TwoStatePreference) preference).isChecked());
+        } else if (preference == mStatusBarHide) {
+            boolean checked = ((CheckBoxPreference)preference).isChecked();
+            Settings.System.putBoolean(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_HIDDEN, checked ? true : false);
             return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
@@ -828,10 +860,12 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         mDisableBootAnimation.setChecked(false);
         DisableBootAnimation();
         dialog.dismiss();
-        Executable installScript = new Executable(
-                "cp " + bootAnimationPath + " /data/local/bootanimation.zip",
-                "chmod 644 /data/local/bootanimation.zip");
-        mCMDProcessor.su.runWaitFor(installScript);
+        new AbstractAsyncSuCMDProcessor() {
+          @Override
+          protected void onPostExecute(String result) {
+          }
+        }.execute("cp " + bootAnimationPath + " /data/local/bootanimation.zip",
+                  "chmod 644 /data/local/bootanimation.zip");
     }
 
     private void DisableBootAnimation() {
@@ -873,6 +907,13 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
             Settings.System.putInt(mContentResolver,
                     Settings.System.USER_UI_MODE, Integer.parseInt((String) newValue));
             Helpers.restartSystemUI();
+            return true;
+                } else if (preference == mCrtMode) {
+            int crtMode = Integer.valueOf((String) newValue);
+            int index = mCrtMode.findIndexOfValue((String) newValue);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.SYSTEM_POWER_CRT_MODE, crtMode);
+            mCrtMode.setSummary(mCrtMode.getEntries()[index]);
             return true;
         }
         return false;

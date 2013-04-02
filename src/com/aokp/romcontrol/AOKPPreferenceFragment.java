@@ -32,6 +32,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Button;
 
@@ -51,6 +52,7 @@ public class AOKPPreferenceFragment extends PreferenceFragment implements Dialog
     protected boolean hasFastCharge;
     protected boolean hasColorTuning;
     protected boolean hasVibration = false;
+    protected ContentResolver mContentRes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class AOKPPreferenceFragment extends PreferenceFragment implements Dialog
         hasColorTuning = getResources().getBoolean(R.bool.has_color_tuning);
         mContext = getActivity();
         mActionBar = getActivity().getActionBar();
+        mContentRes = getActivity().getContentResolver();
         if(getArguments() != null) {
             mShortcutFragment = getArguments().getBoolean("started_from_shortcut", false);
         }
@@ -90,6 +93,13 @@ public class AOKPPreferenceFragment extends PreferenceFragment implements Dialog
            return false;
 
        return true;
+    }
+
+    public static boolean isSW600DPScreen(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int widthPixels = displayMetrics.widthPixels;
+        float density = displayMetrics.density;
+        return ((widthPixels / density) >= 600);
     }
 
     public void setTitle(int resId) {
