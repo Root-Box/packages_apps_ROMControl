@@ -104,6 +104,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     private static final CharSequence PREF_POWER_CRT_MODE = "system_power_crt_mode";
     private static final CharSequence PREF_POWER_CRT_SCREEN_OFF = "system_power_crt_screen_off";
     private static final CharSequence PREF_STATUSBAR_HIDDEN = "statusbar_hidden";
+    private static final CharSequence PREF_STATUS_BAR_AUTO_NOTIFICATION = "status_bar_auto_notification";
     private static final CharSequence PREF_HIDDEN_STATUSBAR_PULLDOWN = "hidden_statusbar_pulldown";
     private static final CharSequence PREF_HIDDEN_STATUSBAR_PULLDOWN_TIMEOUT = "hidden_statusbar_pulldown_timeout";
 
@@ -140,6 +141,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     ListPreference mCrtMode;
     CheckBoxPreference mCrtOff;
     CheckBoxPreference mStatusBarHide;
+    CheckBoxPreference mStatusBarAutoNotification;
     CheckBoxPreference mHiddenStatusbarPulldown;
     ListPreference mHiddenStatusbarPulldownTimeout;
 
@@ -159,6 +161,7 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
     int mUserRotationAngles = -1;
 
     private boolean isStatusBarHideChecked = false;
+    private boolean isStatusBarNotificationChecked = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -243,13 +246,16 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
         boolean isStatusBarHideChecked = Settings.System.getInt(getActivity().getContentResolver(),
                 Settings.System.STATUSBAR_HIDDEN, 0) == 1;
         mStatusBarHide = (CheckBoxPreference) findPreference(PREF_STATUSBAR_HIDDEN);
-        mStatusBarHide.setChecked(isStatusBarHideChecked);
         mStatusBarHide.setOnPreferenceChangeListener(this);
+
+        boolean isStatusBarNotificationChecked = Settings.System.getInt(getActivity().getContentResolver(),
+                Settings.System.AUTO_HIDE_STATUSBAR, 0) == 1;
+        mStatusBarAutoNotification = (CheckBoxPreference) findPreference(PREF_STATUS_BAR_AUTO_NOTIFICATION);
+        mStatusBarAutoNotification.setOnPreferenceChangeListener(this);
 
         mHiddenStatusbarPulldown = (CheckBoxPreference) findPreference(PREF_HIDDEN_STATUSBAR_PULLDOWN);
         mHiddenStatusbarPulldown.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
                 Settings.System.HIDDEN_STATUSBAR_PULLDOWN, 0) == 1);
-        mHiddenStatusbarPulldown.setEnabled(isStatusBarHideChecked);
         mHiddenStatusbarPulldown.setOnPreferenceChangeListener(this);
 
         mHiddenStatusbarPulldownTimeout = (ListPreference) findPreference(PREF_HIDDEN_STATUSBAR_PULLDOWN_TIMEOUT);
@@ -985,9 +991,19 @@ public class UserInterface extends AOKPPreferenceFragment implements OnPreferenc
                 Settings.System.putInt(getActivity().getContentResolver(),
                         Settings.System.STATUSBAR_HIDDEN, 0);
                 mHiddenStatusbarPulldown.setChecked(false);
+                mStatusBarAutoNotification.setChecked(false);
             }
             mHiddenStatusbarPulldown.setEnabled(isStatusBarHideChecked);
+            mStatusBarAutoNotification.setEnabled(isStatusBarHideChecked);
             Helpers.restartSystemUI();
+            return true;
+        } else if (preference == mStatusBarAutoNotification) {
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.AUTO_HIDE_STATUSBAR,
+                    ((Boolean) newValue).booleanValue() ? 1 : 0);
+            if (isStatusBarNotificationChecked) {
+                mStatusBarHide.setChecked(true);
+            }
             return true;
         } else if (mHiddenStatusbarPulldown.equals(preference)) {
             Settings.System.putInt(getActivity().getContentResolver(),
